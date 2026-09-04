@@ -4,15 +4,18 @@ services:
     container_name: my-portfolio-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: X06TYY/Yja9iLHZzYBZ3q3xcREWshKUno/3aqQpz6cI=
-      MYSQL_DATABASE: portfolio_db
-      MYSQL_USER: portfolio_user
-      MYSQL_PASSWORD: JwR+gn17do/NDhBFQiztMikUqpCcjiHBsBf/OmKI32A=
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - .env
+
 
 volumes:
   mysql_data:
