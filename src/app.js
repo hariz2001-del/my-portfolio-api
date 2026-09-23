@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const { portfolioData } = require('./data/portfolioData');
+const mysqlDb = require('./data/database/mysql/connection');
+const postgresDb = require('./data/database/postgresql/connection');
+const mongoDb = require('./data/database/mongodb/connection');
 
 const app = express();
 
@@ -31,11 +34,21 @@ app.get('/api', (req, res) => {
   });
 });
 
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
+app.get('/api/health', async (req, res) => {
+  const [mysql, postgresql, mongodb] = await Promise.all([
+    mysqlDb.checkHealth(),
+    postgresDb.checkHealth(),
+    mongoDb.checkHealth()
+  ]);
+
+  const databases = { mysql, postgresql, mongodb };
+  const allUp = Object.values(databases).every((db) => db.status === 'up');
+
+  res.status(allUp ? 200 : 503).json({
+    status: allUp ? 'ok' : 'degraded',
     service: 'my-portfolio-api',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    databases
   });
 });
 
