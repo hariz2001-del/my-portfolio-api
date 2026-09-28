@@ -1,12 +1,12 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '../../../../.env') });
 const { MongoClient } = require('mongodb');
 
 const host = process.env.MONGO_HOST || 'localhost';
 const port = process.env.MONGO_PORT || 27017;
-const user = process.env.MONGO_INITDB_ROOT_USERNAME;
-const password = process.env.MONGO_INITDB_ROOT_PASSWORD;
-const database = process.env.MONGO_INITDB_DATABASE;
+const user = process.env.MONGO_USER;
+const password = process.env.MONGO_PASSWORD;
+const database = process.env.MONGO_DB;
 
 const uri = `mongodb://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}:${port}/${database}?authSource=admin`;
 
